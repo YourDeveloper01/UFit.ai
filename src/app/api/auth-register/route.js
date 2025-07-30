@@ -1,30 +1,31 @@
-import dbConnect from '../../../Mongo/Dbconfig/dbconfig';
-import User from '../../../Mongo/Models/user.model';
+// src/app/api/analyze/route.js
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') return res.status(405).end();
+export async function POST(req) {
+  const formData = await req.formData();
+  const file = formData.get('file');
 
-  const { fullname, email, password } = req.body;
-
-  if (!fullname || !email || !password) {
-    return res.status(400).json({ message: 'All fields are required' });
+  if (!file || typeof file === 'string') {
+    return new Response(JSON.stringify({ success: false, error: "No file uploaded" }), {
+      status: 400,
+    });
   }
 
-  await dbConnect();
+  // You can access file info like this:
+  const bytes = await file.arrayBuffer();
+  const buffer = Buffer.from(bytes);
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return res.status(400).json({ message: 'Email already exists' });
-  }
+  // TODO: Send 'buffer' to your AI model or external API
 
-  // ⚠️ In production, hash the password!
-  const newUser = new User({
-    fullname,
-    email,
-    password,
+  // Mock AI response
+  const result = {
+    weightGoal: "Lose 5kg",
+    bodyType: "Ectomorph",
+    estimatedBMI: 22.1,
+    dietPlan: "High protein, moderate carbs, low fat",
+  };
+
+  return new Response(JSON.stringify({ success: true, result }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' },
   });
-
-  await newUser.save();
-
-  res.status(201).json({ message: 'User registered successfully' });
 }

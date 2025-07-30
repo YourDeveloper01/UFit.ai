@@ -9,6 +9,7 @@ export function Navbar() {
 
   return (
     <nav className="bg-white shadow-md fixed top-0 inset-x-0 z-50">
+
       <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo */}
         <Link href="/">
@@ -18,7 +19,7 @@ export function Navbar() {
               alt="UFit Logo"
               width={80}
               height={50}
-              className="h-12 w-auto"
+              className="h-15 w-auto"
               priority
             />
           </div>
@@ -54,7 +55,7 @@ export function Navbar() {
 
       {/* Mobile Dropdown Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white shadow-md">
+        <div className=" bg-white shadow-md">
           <div className="px-4 pt-2 pb-4 space-y-2">
             <Link href="/" className="block text-gray-700 hover:text-red-600">Home</Link>
             <Link href="/about" className="block text-gray-700 hover:text-red-600">About</Link>
