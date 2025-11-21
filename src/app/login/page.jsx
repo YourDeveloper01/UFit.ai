@@ -1,54 +1,109 @@
-const Form = () => {
-  const [form, setForm] = useState({
-    email: '',
-    password: ''
-  });
-  const [message, setMessage] = useState('');
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function Login() {
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const res = await fetch('/api/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    const data = await res.json();
+      if (res.ok) {
+        await res.json(); // optional if token is returned
 
-    if (res.ok) {
-      setMessage('Login Successful!');
-      localStorage.setItem('token', data.token);
-      // redirect or navigate here
-    } else {
-      setMessage(data.message || 'Login failed');
+        // redirect to home page
+        setTimeout(() => {
+          router.push("/"); 
+        }, 200);
+      } else {
+        const err = await res.json();
+        setError(err.error || "Login failed");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <StyledWrapper>
-      <div className="container">
-        <div className="heading">Sign In</div>
-        <form className="form" onSubmit={handleSubmit}>
-          <input
-            required
-            className="input"
-            type="email"
-            placeholder="E-mail"
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-          <input
-            required
-            className="input"
-            type="password"
-            placeholder="Password"
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
-          <span className="forgot-password"><a href="#">Forgot Password?</a></span>
-          <input className="login-button" type="submit" value="Sign In" />
-          <p style={{ textAlign: 'center', marginTop: '10px' }}>{message}</p>
-        </form>
-      </div>
-    </StyledWrapper>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-100 to-white px-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white p-6 rounded shadow-md"
+      >
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Welcome Back
+        </h2>
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="mb-4 w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+          className="mb-4 w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-pink-400"
+        />
+
+        {error && (
+          <p className="mb-4 text-sm px-3 py-2 rounded text-red-600 bg-red-50">
+            {error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading}
+          className={`w-full py-2 px-4 text-white rounded font-semibold transition ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600"
+          }`}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+
+        <p className="mt-4 text-center text-sm text-gray-600">
+          Don’t have an account?{" "}
+          <a
+            href="/signup"
+            className="text-pink-500 hover:underline font-medium"
+          >
+            Sign Up
+          </a>
+        </p>
+      </form>
+    </div>
   );
-};
+}

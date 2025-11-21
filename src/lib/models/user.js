@@ -22,5 +22,7 @@ userSchema.statics.hashPassword = async function (password) {
   return await bcrypt.hash(password, salt);
 };
 
+// Register model if not already registered
 const User = mongoose.models.User || mongoose.model('User', userSchema);
+
 export default User;

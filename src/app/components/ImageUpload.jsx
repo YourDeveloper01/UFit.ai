@@ -62,16 +62,14 @@ export default function ImageUpload() {
       <label
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
-        className="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-red-500 transition p-4 text-center"
-      >
+        className="flex flex-col items-center justify-center w-full h-52 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-red-500 transition p-4 text-center">
         {preview ? (
           <Image
             src={preview}
             alt="Preview"
             width={180}
             height={180}
-            className="rounded-md object-cover"
-          />
+            className="rounded-md object-cover"/>
         ) : (
           <>
             <svg
@@ -79,11 +77,12 @@ export default function ImageUpload() {
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
-              viewBox="0 0 24 24"
-            >
+              viewBox="0 0 24 24">
               <path d="M12 16v-4m0 0V8m0 4h4m-4 0H8m12 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p className="text-gray-300">Click or drag & drop to upload image</p>
+            <p className="text-gray-300">
+              Click or drag & drop to upload image
+            </p>
           </>
         )}
         <input
@@ -91,8 +90,7 @@ export default function ImageUpload() {
           accept="image/*"
           onChange={handleImageChange}
           ref={fileInputRef}
-          className="hidden"
-        />
+          className="hidden"/>
       </label>
 
       {/* Analyze Button */}
@@ -101,8 +99,7 @@ export default function ImageUpload() {
           <button
             onClick={handleAnalyze}
             disabled={loading}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg--700 transition disabled:opacity-50"
-          >
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg--700 transition disabled:opacity-50">
             {loading ? "Analyzing..." : "Analyze Now"}
           </button>
         </div>
@@ -111,7 +108,9 @@ export default function ImageUpload() {
       {/* Results */}
       {result && (
         <div className="mt-6 p-4 border rounded-lg bg-white shadow">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Analysis Result</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">
+            Analysis Result
+          </h2>
           <div className="space-y-2 text-sm text-gray-700">
             <p>
               <span className="font-medium">🏋️ Weight Goal:</span>{" "}
