@@ -1,7 +1,7 @@
 // app/upload/UploadPageClient.jsx
 "use client";
 
-import ImageUpload from "@/app/components/ImageUpload";
+import ImageUpload from "@/components/ImageUpload";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
