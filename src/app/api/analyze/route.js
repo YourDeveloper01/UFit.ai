@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
 export async function POST(req) {
   try {
+    // If NO API key → return safe error instead of breaking build
+    if (!process.env.OPENAI_API_KEY) {
+      return NextResponse.json(
+        { error: "OpenAI API key not configured" },
+        { status: 500 }
+      );
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
     const { imageUrl, weight } = await req.json();
 
     const prompt = `
@@ -30,6 +38,7 @@ Diet Plan:
     });
 
     return NextResponse.json({ result: response.choices[0].message.content });
+
   } catch (err) {
     console.error('[AI ERROR]', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
